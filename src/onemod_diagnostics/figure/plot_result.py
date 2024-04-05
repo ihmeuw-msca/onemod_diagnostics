@@ -71,7 +71,7 @@ def plot_result(
 
     """
     fig = plt.Figure(**fig_options)
-    so.Plot(data, x="year_id").facet(**facet_options).on(fig).plot()
+    so.Plot(data, x=x).facet(**facet_options).on(fig).plot()
     axes = fig.get_axes()
     by = [
         facet_options.get(key)
