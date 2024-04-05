@@ -1,0 +1,24 @@
+[build-system]
+requires = ["setuptools"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "onemod_diagonstics"
+version = "0.1.0"
+description = "Diagnostics for OneMod"
+readme = "README.rst"
+requires-python = ">=3.10"
+license = { file = "LICENSE" }
+authors = [
+    { name = "IHME Math Sciences", email = "ihme.math.sciences@gmail.com" },
+]
+dependencies = [
+    "pandas",
+    "seaborn",
+]
+
+[project.optional-dependencies]
+test = ["pytest"]
+
+[project.urls]
+github = "https://github.com/ihmeuw-msca/onemod_diagonstics"
