@@ -94,5 +94,15 @@ def plot_result(
         for y in y_line:
             ax.plot(df[x], df[y], label=y, **line_options.get(y, {}))
 
+    # plot posinf and neginf
+    ylim = ax.get_ylim()
+    for ax, df in zip(axes, data_list):
+        for y in y_dots:
+            df = df.query(f"{y} in [-inf, inf]").reset_index(drop=True)
+            if not df.empty:
+                df[y] = df[y].clip(*ylim)
+                ax.scatter(df[x], df[y], label=y, **dots_options.get(y, {}))
+        ax.set_ylim(ylim)
+
     fig.legend(*ax.get_legend_handles_labels(), loc="center right")
     return fig
