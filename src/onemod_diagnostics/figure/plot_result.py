@@ -80,13 +80,10 @@ def plot_result(
     ]
 
     if by:
-        keys = [ax.get_title() for ax in axes]
-        if len(by) == 2:
-            keys = [tuple(key.split(" | ")) for key in keys]
-        keys = pd.DataFrame(data=keys, columns=by).astype(data[by].dtypes.to_dict())
+        keys = [ax.get_title().split(" | ") for ax in axes]
         data_list = []
-        for key in keys.itertuples(index=False):
-            selection = " & ".join([f"{k} == {v}" for k, v in key._asdict().items()])
+        for key in keys:
+            selection = " & ".join([f"{k} == {v}" for k, v in zip(by, key)])
             data_list.append(data.query(selection))
     else:
         data_list = [data]
