@@ -1,0 +1,1 @@
+from onemod_diagnostics.figure.plot_result import plot_result
