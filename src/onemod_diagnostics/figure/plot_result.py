@@ -123,5 +123,12 @@ def plot_result(
         ax.set_ylim(ylim)
 
     fig.tight_layout()
-    fig.legend(*ax.get_legend_handles_labels(), loc="lower center")
+    handles, labels = ax.get_legend_handles_labels()
+    fig.legend(
+        handles,
+        labels,
+        loc="lower center",
+        bbox_to_anchor=(0.5, -0.05),
+        ncol=len(handles),
+    )
     return fig
