@@ -41,7 +41,8 @@ def plot_result(
         https://seaborn.pydata.org/generated/seaborn.objects.Plot.share.html
     scale_options
         Dictionary with options for scale axes on plot. For details please see,
-        https://seaborn.pydata.org/generated/seaborn.objects.Plot.scale.html
+        https://matplotlib.org/stable/api/_as_gen/matplotlib.axes.Axes.set_xscale.html
+        https://matplotlib.org/stable/api/_as_gen/matplotlib.axes.Axes.set_yscale.html
     fig_options
         Dictionary with options for creating the figure.
 
@@ -79,14 +80,7 @@ def plot_result(
 
     """
     fig = plt.Figure(**fig_options)
-    (
-        so.Plot(data, x=x)
-        .facet(**facet_options)
-        .share(**share_options)
-        .scale(**scale_options)
-        .on(fig)
-        .plot()
-    )
+    so.Plot(data, x=x).facet(**facet_options).share(**share_options).on(fig).plot()
     axes = fig.get_axes()
     by = [
         facet_options.get(key)
@@ -114,6 +108,9 @@ def plot_result(
 
     # plot posinf and neginf
     for ax, df in zip(axes, data_list):
+        for name, scale in scale_options.items():
+            getattr(ax, f"set_{name}scale")(scale)
+
         ylim = ax.get_ylim()
         for y in y_dots:
             df = df.query(f"{y} in [-inf, inf]").reset_index(drop=True)
