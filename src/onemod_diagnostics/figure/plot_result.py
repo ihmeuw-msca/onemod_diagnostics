@@ -11,6 +11,8 @@ def plot_result(
     dots_options: dict = {},
     line_options: dict = {},
     facet_options: dict = {},
+    share_options: dict = {},
+    scale_options: dict = {},
     fig_options: dict = {},
 ) -> plt.Figure:
     """Plot result from OneMod model.
@@ -34,6 +36,12 @@ def plot_result(
     facet_options
         Dictionary with options for facet plot. For details please see,
         https://seaborn.pydata.org/generated/seaborn.objects.Plot.facet.html
+    share_options
+        Dictionary with options for share axes on plot. For details please see,
+        https://seaborn.pydata.org/generated/seaborn.objects.Plot.share.html
+    scale_options
+        Dictionary with options for scale axes on plot. For details please see,
+        https://seaborn.pydata.org/generated/seaborn.objects.Plot.scale.html
     fig_options
         Dictionary with options for creating the figure.
 
@@ -71,7 +79,14 @@ def plot_result(
 
     """
     fig = plt.Figure(**fig_options)
-    so.Plot(data, x=x).facet(**facet_options).on(fig).plot()
+    (
+        so.Plot(data, x=x)
+        .facet(**facet_options)
+        .share(**share_options)
+        .scale(**scale_options)
+        .on(fig)
+        .plot()
+    )
     axes = fig.get_axes()
     by = [
         facet_options.get(key)
@@ -98,8 +113,8 @@ def plot_result(
             ax.plot(df[x], df[y], label=y, **line_options.get(y, {}))
 
     # plot posinf and neginf
-    ylim = ax.get_ylim()
     for ax, df in zip(axes, data_list):
+        ylim = ax.get_ylim()
         for y in y_dots:
             df = df.query(f"{y} in [-inf, inf]").reset_index(drop=True)
             if not df.empty:
@@ -107,5 +122,13 @@ def plot_result(
                 ax.scatter(df[x], df[y], label=y, **dots_options.get(y, {}))
         ax.set_ylim(ylim)
 
-    fig.legend(*ax.get_legend_handles_labels(), loc="center right")
+    fig.tight_layout()
+    handles, labels = ax.get_legend_handles_labels()
+    fig.legend(
+        handles,
+        labels,
+        loc="lower center",
+        bbox_to_anchor=(0.5, -0.05),
+        ncol=len(handles),
+    )
     return fig
